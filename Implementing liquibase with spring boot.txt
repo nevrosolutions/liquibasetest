@@ -1,0 +1,48 @@
+1. Add dependancies in to pom.xml
+
+    <dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+    </dependency>
+
+2.Create db/changelog folder in resource folder of the project
+
+3.create liquibase-changelog.xml in db folder and mension it in application.property as follows
+   spring.liquibase.change-log=classpath:db/liquibase-changelog.xml
+
+4. Add the changes/creates in xmls separately for db changes in db/changes as follows (Best practices)
+  
+   Note : create liqubase in xml : https://www.liquibase.org/documentation/changes/add_column.html
+
+   1. 01-create book-and-author-schema.xml
+   2. 02-insert-data-to-author-table.xml
+   3. 03-incert-data-to-book-table.xml
+   4. 04-update-book-table-add-isbn-column.xml
+   
+
+5. include them in main liquibase file as follows
+  
+    <include file="changelog/01-create book-and-author-schema.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/02-insert-data-to-author-table.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/03-incert-data-to-book-table.xml" relativeToChangelogFile="true"/>
+  <include file="changelog/04-update-book-table-add-isbn-column.xml"   relativeToChangelogFile="true"/>
+  
+
+Possible errors and exceptions 
+=================================
+
+1.Caused by: org.xml.sax.SAXParseException: cvc-elt.1: Cannot find the declaration of element   'changeSet'.
+
+   * Headers of all xml file should be same as main liquibase file.
+    
+ <databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+2.Caused by: java.sql.SQLIntegrityConstraintViolationException: Cannot add or update a child row: a foreign key constraint fails
+
+  Parent table records should create when inserting records. 
+
+
